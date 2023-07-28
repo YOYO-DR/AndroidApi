@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             JSONArray miJsonArray=miJsonObj.getJSONArray("data");
             //colocar datos en el listView
             //crear el adaptador
+            Adaptador miAdaptador = new Adaptador(this,miJsonArray);
+            reciclerLista.setAdapter(miAdaptador);
         }else{
             Toast.makeText(this, respuesta, Toast.LENGTH_SHORT).show();
         }

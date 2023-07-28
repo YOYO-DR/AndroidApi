@@ -5,24 +5,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
     JSONArray jsonArray;
+    Context context;
     public Adaptador (Context context,JSONArray jsonArray ){
-    this.jsonArray=jsonArray;
+        this.context = context;
+        this.jsonArray=jsonArray;
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         //atributos
         ImageView imagenUser;
+        TextView tvNombre,tvApellido;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //relacion de los atributos con la vista
+            imagenUser=itemView.findViewById(R.id.imageView);
+            tvNombre=itemView.findViewById(R.id.tvNombre);
+            tvApellido=itemView.findViewById(R.id.tvApellido);
         }
     }
 
@@ -35,7 +46,19 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull Adaptador.ViewHolder holder, int position) {
-    //colocar los datos del json a cadaelemnto o vista
+    //colocar los datos del json a cada elemento o vista
+        try {
+            holder.tvNombre.setText(jsonArray.getJSONObject(position).get("first_name").toString());
+            holder.tvApellido.setText(jsonArray.getJSONObject(position).get("last_name").toString());
+            //holder.imagenUser.setImageResource(R.mipmap.ic_launcher);
+            String url=jsonArray.getJSONObject(position).get("avatar").toString();
+            //con picasso le paso el contexto, con el load la url, y en el into el imagenView
+            Picasso.with(this.context).load(url).into(holder.imagenUser);
+        }catch (JSONException e){
+            //error no se pudo obtener el json
+            throw new RuntimeException(e);
+        }
+
 
     }
 
